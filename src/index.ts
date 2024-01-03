@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import { Request,Response } from 'express';
 import { authRouter } from './routes/auth';
 import { PrismaClient } from '@prisma/client'
+import { notesRouter } from './routes/notes';
+import { searchRouter } from './routes/search';
 
 export const prisma = new PrismaClient()
 const app = express();
@@ -19,6 +21,8 @@ router.get('/', (req : Request, res : Response) => {
 app.use(router);
 
 router.use('/api/auth', authRouter);
+router.use('/api/notes', notesRouter)
+router.use('/api/search', searchRouter);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
