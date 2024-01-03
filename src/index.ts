@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Request,Response } from 'express';
+import { authRouter } from './routes/auth';
 
 const app = express();
 const PORT = 3000;
@@ -14,6 +15,8 @@ router.get('/', (req : Request, res : Response) => {
 })
 
 app.use(router);
+
+router.use('/api/auth', authRouter);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
