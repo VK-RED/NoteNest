@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import {prisma} from "../index"
 import {z} from 'zod';
-import { EditNotesProps, ShareNotesProps, createNotesProps } from '../types';
+import { EditNotesProps, ShareNotesProps, createNotesProps } from '../schema';
 import { authMiddleware } from '../middlewares/auth';
 import { NEW_NOTE_ADDED, NOTE_DELETED, NOTE_EDITED, NOTE_SHARED, NOTE_SHARED_ALREADY, NO_NOTE_FOUND, SIGN_AGAIN, UNFORSEEN_ERROR, USER_NOT_FOUND } from '../constants';
 

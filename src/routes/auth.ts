@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { AuthInputProps } from '../types';
+import { AuthInputProps } from '../schema';
 import jwt from 'jsonwebtoken';
 import {prisma} from "../index"
 import {z} from 'zod';
