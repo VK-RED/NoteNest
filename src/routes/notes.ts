@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import {prisma} from "../index"
 import {z} from 'zod';
-import { EditNotesProps, createNotesProps } from '../types';
+import { EditNotesProps, ShareNotesProps, createNotesProps } from '../types';
 import { authMiddleware } from '../middlewares/auth';
-import { NEW_NOTE_ADDED, NOTE_DELETED, NOTE_EDITED, NO_NOTE_FOUND, SIGN_AGAIN, UNFORSEEN_ERROR } from '../constants';
+import { NEW_NOTE_ADDED, NOTE_DELETED, NOTE_EDITED, NOTE_SHARED, NOTE_SHARED_ALREADY, NO_NOTE_FOUND, SIGN_AGAIN, UNFORSEEN_ERROR, USER_NOT_FOUND } from '../constants';
 
 const {Router} = express;
 
@@ -182,7 +182,7 @@ notesRouter.get("/", authMiddleware, async (req:Request,res:Response) => {
                 userId,
             }
         })
-        
+
         return res.json({allNotes})
 
     } catch (error) {
@@ -193,5 +193,68 @@ notesRouter.get("/", authMiddleware, async (req:Request,res:Response) => {
 
 })
 
+// share a note with another user
 
+notesRouter.post("/:id/share", authMiddleware, async(req:Request, res:Response) => {
+
+    try {
+
+        const noteId = req.params['id'];
+        const userId = req.headers['userId'] as string;
+        const {toUserId} = ShareNotesProps.parse(req.body);
+
+        //check the note exists
+        const existingNote = await prisma.personalNotes.findUnique({
+            where:{
+                id: noteId,
+            }
+        })
+
+        if(!existingNote) return res.json({message:NO_NOTE_FOUND})
+
+        // check the recepient user exists
+
+        const recepient = await prisma.user.findUnique({
+            where:{
+                id: toUserId,
+            }
+        })
+
+        if(!recepient) return res.json({message:USER_NOT_FOUND})
+
+        // check if this note has already been shared with the recepient
+
+        const existingSharedNote = await prisma.sharedNotes.findFirst({
+            where:{
+                title: existingNote.title,
+                description: existingNote.description,
+            }
+        })
+        
+        if(existingSharedNote) return res.json({message:NOTE_SHARED_ALREADY})
+
+        // share the note with the recepient if everything falls in place
+
+        const sharedNotes = await prisma.sharedNotes.create({
+            data:{
+                description: existingNote.description,
+                title: existingNote.title,
+                fromUserId: userId,
+                toUserId,
+            }
+        })
+
+        return res.json({message:NOTE_SHARED});
+        
+    } catch (error) {
+
+        if(error instanceof z.ZodError){
+            console.log(error.errors);
+            return res.json({error:error.errors});
+        }
+
+        console.log(error);
+        return res.json({message:UNFORSEEN_ERROR});
+    }
+})
 
