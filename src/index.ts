@@ -2,7 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { Request,Response } from 'express';
 import { authRouter } from './routes/auth';
+import { PrismaClient } from '@prisma/client'
 
+export const prisma = new PrismaClient()
 const app = express();
 const PORT = 3000;
 const router = express.Router();
