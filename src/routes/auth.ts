@@ -1,11 +1,16 @@
 import express, { Request, Response } from 'express';
 import { AuthInputProps } from '../types';
-
+import jwt from 'jsonwebtoken';
 import {prisma} from "../index"
-import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, USER_EXISTS, USER_NOT_FOUND } from '../constants';
 import {z} from 'zod';
-const {Router} = express;
+import { ACCOUNT_CREATION_SUCCESS, 
+         PASSWORD_MISMATCH, 
+         SECRET, 
+         USER_EXISTS, 
+         USER_NOT_FOUND,
+        } from '../constants';
 
+const {Router} = express;
 
 export const authRouter = Router();
 
@@ -31,7 +36,8 @@ authRouter.post('/signup', async(req:Request, res:Response)=>{
                 }
             })
 
-            return res.json({message:ACCOUNT_CREATION_SUCCESS, userId: newUser.id});
+            const token = jwt.sign({userId:newUser.id},SECRET,{expiresIn:"1h"})
+            return res.json({message:ACCOUNT_CREATION_SUCCESS, userId: newUser.id,token});
         }
         else{
             throw new Error(USER_EXISTS);
@@ -70,7 +76,8 @@ authRouter.post('/login', async (req:Request, res:Response)=>{
             return res.json({message:PASSWORD_MISMATCH})
         }
         else{
-            return res.json({message:"YOU HAVE LOGGED IN"})
+            const token = jwt.sign({userId:existingUser.id},SECRET,{expiresIn:'1h'});
+            return res.json({userId: existingUser.id,token});
         }
         
     } catch (error) {
@@ -78,6 +85,10 @@ authRouter.post('/login', async (req:Request, res:Response)=>{
         if(error instanceof z.ZodError){
             console.log(error.issues);
             return res.json({issues: error.issues});
+        }
+        else{
+            console.log(error);
+            return res.json({message:"something went wrong"})
         }
     }
     
