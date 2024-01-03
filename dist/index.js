@@ -8,6 +8,8 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const auth_1 = require("./routes/auth");
 const client_1 = require("@prisma/client");
+const notes_1 = require("./routes/notes");
+const search_1 = require("./routes/search");
 exports.prisma = new client_1.PrismaClient();
 const app = (0, express_1.default)();
 const PORT = 3000;
@@ -19,6 +21,8 @@ router.get('/', (req, res) => {
 });
 app.use(router);
 router.use('/api/auth', auth_1.authRouter);
+router.use('/api/notes', notes_1.notesRouter);
+router.use('/api/search', search_1.searchRouter);
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}`);
 });
