@@ -2,11 +2,9 @@ import express, { Request, Response } from 'express';
 import { AuthInputProps } from '../types';
 
 import {prisma} from "../index"
-import { ACCOUNT_CREATION_SUCCESS, USER_EXISTS } from '../constants';
-import {ZodError, z} from 'zod';
+import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, USER_EXISTS, USER_NOT_FOUND } from '../constants';
+import {z} from 'zod';
 const {Router} = express;
-
-
 
 
 export const authRouter = Router();
@@ -54,6 +52,33 @@ authRouter.post('/signup', async(req:Request, res:Response)=>{
 })
 
 // Login Route
-authRouter.post('/login', (req:Request, res:Response)=>{
+authRouter.post('/login', async (req:Request, res:Response)=>{
+
+    try {
+        const parsedData = AuthInputProps.parse(req.body);
+
+        const existingUser = await prisma.user.findUnique({
+            where:{
+                email:parsedData.email,
+            }
+        })
+
+        if(!existingUser){
+            return res.json({message:USER_NOT_FOUND})
+        }
+        else if(existingUser.password !== parsedData.password){
+            return res.json({message:PASSWORD_MISMATCH})
+        }
+        else{
+            return res.json({message:"YOU HAVE LOGGED IN"})
+        }
+        
+    } catch (error) {
+
+        if(error instanceof z.ZodError){
+            console.log(error.issues);
+            return res.json({issues: error.issues});
+        }
+    }
     
 })
