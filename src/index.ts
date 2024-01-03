@@ -4,13 +4,16 @@ import { Request,Response } from 'express';
 
 const app = express();
 const PORT = 3000;
+const router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/', (req : Request, res : Response) => {
-  res.send('Hello World!')
+router.get('/', (req : Request, res : Response) => {
+  res.json({message:'The Server is Up !!!'})
 })
+
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
