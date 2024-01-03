@@ -1,0 +1,4 @@
+- First add a Database via Docker compose
+- Then initialize Prisma
+- Start from the Auth Route
+- Move to other routes
