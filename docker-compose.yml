@@ -10,7 +10,21 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mysecretpassword
     ports:
-      - "5450:5432"
+      - "5432:5432"
+      - "5555:5555"
+  app:
+    build: 
+      context: .
+      dockerfile: "Dockerfile"
+      target: "development"
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - .:/usr/src/app
 
 volumes:
   postgres_data:
