@@ -5,6 +5,7 @@ import { authRouter } from './routes/auth';
 import { PrismaClient } from '@prisma/client'
 import { notesRouter } from './routes/notes';
 import { searchRouter } from './routes/search';
+import { errorMiddleware } from './middlewares/error';
 
 // initial configs
 export const prisma = new PrismaClient()
@@ -27,6 +28,9 @@ app.use(router);
 router.use('/api/auth', authRouter);
 router.use('/api/notes', notesRouter)
 router.use('/api/search', searchRouter);
+
+// handle error when invalid route is hit!!
+router.use(errorMiddleware)
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
