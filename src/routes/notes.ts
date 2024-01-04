@@ -6,26 +6,32 @@ import { createNoteController,
          getNoteController, 
          getNotesController, 
          shareNoteController } from '../controllers/notes';
+import { limiterMiddleware } from '../middlewares/rateLimiter';
 
 const {Router} = express;
 
 export const notesRouter = Router();
 
+
+// Add authentication and rate limit middlewares
+notesRouter.use(authMiddleware);
+notesRouter.use(limiterMiddleware);
+
 //add a new note
-notesRouter.post("/", authMiddleware, createNoteController);
+notesRouter.post("/", createNoteController);
 
 //edit a note if it exists
-notesRouter.put("/:id", authMiddleware, editNoteController);
+notesRouter.put("/:id", editNoteController);
 
 // delete a note
-notesRouter.delete("/:id", authMiddleware, deleteNoteController);
+notesRouter.delete("/:id", deleteNoteController);
 
 // get a single note
-notesRouter.get("/:id", authMiddleware, getNoteController);
+notesRouter.get("/:id", getNoteController);
 
 // get all notes
-notesRouter.get("/", authMiddleware, getNotesController)
+notesRouter.get("/", getNotesController)
 
 // share a note with another user
-notesRouter.post("/:id/share", authMiddleware, shareNoteController)
+notesRouter.post("/:id/share", shareNoteController)
 
