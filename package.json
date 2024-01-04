@@ -5,7 +5,8 @@
   "author": "Vishnu Kumar",
   "license": "MIT",
   "scripts": {
-    "dev": "npx tsc && node dist/index.js"
+    "dev": "npx tsc && node dist/index.js",
+    "studio" : "npx prisma studio"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
