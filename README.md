@@ -1,5 +1,5 @@
 # NOTENEST 
-NoteNest provide API endpoints for you to manage and share your notes with others.
+NoteNest provide API endpoints for you to manage and share your notes with others. Users can Create, Read, Update, Delete, Search amd Share the notes. Each user will be Rate Limited at the rate of 100 Req / Hour for higher throughput.
 
 ### TECHSTACK
 - [TypeScript](https://www.typescriptlang.org/)  - Language ( TypeScript for strict type checking )
