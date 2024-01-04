@@ -28,7 +28,7 @@ export async function createNoteController(req:Request,res:Response){
             }
         });
 
-        if(!user) return res.json({message:SIGN_AGAIN});
+        if(!user) return res.status(400).json({message:SIGN_AGAIN});
 
         //create a new note
 
@@ -40,16 +40,16 @@ export async function createNoteController(req:Request,res:Response){
             }
         })
 
-        return res.json({message:NEW_NOTE_ADDED});
+        return res.status(202).json({message:NEW_NOTE_ADDED});
 
     } catch (error) {
 
         if(error instanceof z.ZodError){
             console.log(error.errors);
-            return res.json({error:error.errors});
+            return res.status(404).json({error:error.errors});
         }
 
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }
 
@@ -68,7 +68,7 @@ export async function editNoteController(req:Request,res:Response){
             }
         })
 
-        if(!note) return res.json({message:NO_NOTE_FOUND});
+        if(!note) return res.status(400).json({message:NO_NOTE_FOUND});
 
         //update the new metadata
 
@@ -93,16 +93,16 @@ export async function editNoteController(req:Request,res:Response){
             })
         }
 
-        return res.json({message:NOTE_EDITED})
+        return res.status(200).json({message:NOTE_EDITED})
 
 
     } catch (error) {
         if(error instanceof z.ZodError){
             console.log(error.errors);
-            return res.json({error:error.errors});
+            return res.status(402).json({error:error.errors});
         }
 
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }
 
@@ -118,7 +118,7 @@ export async function deleteNoteController(req:Request,res:Response){
             }
         })
 
-        if(!note) return res.json({message:NO_NOTE_FOUND});
+        if(!note) return res.status(404).json({message:NO_NOTE_FOUND});
 
         //delete the note
 
@@ -128,16 +128,16 @@ export async function deleteNoteController(req:Request,res:Response){
             }
         })
 
-        return res.json({message:NOTE_DELETED})
+        return res.status(200).json({message:NOTE_DELETED})
 
 
     } catch (error) {
         if(error instanceof z.ZodError){
             console.log(error.errors);
-            return res.json({error:error.errors});
+            return res.status(402).json({error:error.errors});
         }
 
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }
 
@@ -153,17 +153,17 @@ export async function getNoteController(req:Request,res:Response){
             },
         })
 
-        if(!note) return res.json({message:NO_NOTE_FOUND});
-        return res.json({note})
+        if(!note) return res.status(400).json({message:NO_NOTE_FOUND});
+        return res.status(200).json({note})
 
     } catch (error) {
 
         if(error instanceof z.ZodError){
             console.log(error.errors);
-            return res.json({error:error.errors});
+            return res.status(402).json({error:error.errors});
         }
 
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }
 
@@ -179,12 +179,12 @@ export async function getNotesController(req:Request,res:Response){
             }
         })
 
-        return res.json({allNotes})
+        return res.status(200).json({allNotes})
 
     } catch (error) {
 
         console.log(error);
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }
 
@@ -204,7 +204,7 @@ export async function shareNoteController(req:Request,res:Response){
             }
         })
 
-        if(!existingNote) return res.json({message:NO_NOTE_FOUND})
+        if(!existingNote) return res.status(404).json({message:NO_NOTE_FOUND})
 
         // check the recepient user exists
 
@@ -214,7 +214,7 @@ export async function shareNoteController(req:Request,res:Response){
             }
         })
 
-        if(!recepient) return res.json({message:USER_NOT_FOUND})
+        if(!recepient) return res.status(404).json({message:USER_NOT_FOUND})
 
         // check if this note has already been shared with the recepient
 
@@ -225,7 +225,7 @@ export async function shareNoteController(req:Request,res:Response){
             }
         })
         
-        if(existingSharedNote) return res.json({message:NOTE_SHARED_ALREADY})
+        if(existingSharedNote) return res.status(202).json({message:NOTE_SHARED_ALREADY})
 
         // share the note with the recepient if everything falls in place
 
@@ -238,16 +238,16 @@ export async function shareNoteController(req:Request,res:Response){
             }
         })
 
-        return res.json({message:NOTE_SHARED});
+        return res.status(200).json({message:NOTE_SHARED});
         
     } catch (error) {
 
         if(error instanceof z.ZodError){
             console.log(error.errors);
-            return res.json({error:error.errors});
+            return res.status(402).json({error:error.errors});
         }
 
         console.log(error);
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }

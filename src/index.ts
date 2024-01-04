@@ -19,7 +19,7 @@ app.use(bodyParser.json())
 
 // basic health route
 router.get('/', (req : Request, res : Response) => {
-  res.json({message:'The Server is Up !!!'})
+  res.status(200).json({message:'The Server is Up !!!'})
 })
 
 // actual logic routers

@@ -54,13 +54,13 @@ export async function searchController(req:Request, res:Response){
         const fileredNotes = [...filteredPersonalNotes, ...filteredSharedNotes];
 
         // check for valid results
-        if(fileredNotes.length === 0) return res.json({message:NO_RESULTS});
+        if(fileredNotes.length === 0) return res.status(200).json({message:NO_RESULTS});
 
-        return res.json({fileredNotes});
+        return res.status(200).json({fileredNotes});
 
     } catch (error) {
         
         console.log(error);
-        return res.json({message:UNFORSEEN_ERROR});
+        return res.status(500).json({message:UNFORSEEN_ERROR});
     }
 }

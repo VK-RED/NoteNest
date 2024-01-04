@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { AuthInputProps } from '../schema';
 import {prisma} from "../index"
 import jwt from 'jsonwebtoken'
-import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, SALT_ROUNDS, SECRET, USER_EXISTS, USER_NOT_FOUND } from '../constants';
+import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, SALT_ROUNDS, SECRET, UNFORSEEN_ERROR, USER_EXISTS, USER_NOT_FOUND } from '../constants';
 import {z} from 'zod'
 import bcrypt from 'bcrypt'
 
@@ -32,7 +32,7 @@ export async function SignupController(req:Request, res:Response){
             })
 
             const token = jwt.sign({userId:newUser.id},SECRET,{expiresIn:"1h"})
-            return res.json({message:ACCOUNT_CREATION_SUCCESS, userId: newUser.id,token});
+            return res.status(200).json({message:ACCOUNT_CREATION_SUCCESS, userId: newUser.id,token});
         }
         else{
             throw new Error(USER_EXISTS);
@@ -42,11 +42,11 @@ export async function SignupController(req:Request, res:Response){
 
         if(error instanceof z.ZodError){
             console.log(error.issues);
-            return res.json({issues: error.issues});
+            return res.status(404).json({issues: error.issues});
         }
         else{
             console.log(error);
-            return res.json({message:USER_EXISTS});
+            return res.status(500).json({message:USER_EXISTS});
         }
     }
 }
@@ -65,25 +65,25 @@ export async function loginController(req:Request, res:Response){
         // allow login only if the user exists and passwords match 
 
         if(!existingUser){
-            return res.json({message:USER_NOT_FOUND})
+            return res.status(404).json({message:USER_NOT_FOUND})
         }
         else if(!bcrypt.compareSync(parsedData.password, existingUser.password)){
-            return res.json({message:PASSWORD_MISMATCH})
+            return res.status(404).json({message:PASSWORD_MISMATCH})
         }
         else{
             const token = jwt.sign({userId:existingUser.id},SECRET,{expiresIn:'1h'});
-            return res.json({userId: existingUser.id,token});
+            return res.status(200).json({userId: existingUser.id,token});
         }
         
     } catch (error) {
 
         if(error instanceof z.ZodError){
             console.log(error.issues);
-            return res.json({issues: error.issues});
+            return res.status(402).json({issues: error.issues});
         }
         else{
             console.log(error);
-            return res.json({message:"something went wrong"})
+            return res.status(500).json({message:UNFORSEEN_ERROR})
         }
     }
 }
