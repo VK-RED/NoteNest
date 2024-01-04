@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { AuthInputProps } from '../schema';
 import {prisma} from "../index"
 import jwt from 'jsonwebtoken'
-import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, SECRET, USER_EXISTS, USER_NOT_FOUND } from '../constants';
+import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, SALT_ROUNDS, SECRET, USER_EXISTS, USER_NOT_FOUND } from '../constants';
 import {z} from 'zod'
+import bcrypt from 'bcrypt'
 
 // function to signup a user
 
@@ -17,12 +18,14 @@ export async function SignupController(req:Request, res:Response){
             }
         })
 
+        const hashedPassword = bcrypt.hashSync(parsedData.password, SALT_ROUNDS);
+
         // only create a new user if not exists already
         if(!existingUser){
             const newUser = await prisma.user.create({
                 data:{
                     email:parsedData.email,
-                    password: parsedData.password,
+                    password: hashedPassword
                 }
             })
 
@@ -62,7 +65,7 @@ export async function loginController(req:Request, res:Response){
         if(!existingUser){
             return res.json({message:USER_NOT_FOUND})
         }
-        else if(existingUser.password !== parsedData.password){
+        else if(!bcrypt.compareSync(parsedData.password, existingUser.password)){
             return res.json({message:PASSWORD_MISMATCH})
         }
         else{
