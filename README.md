@@ -21,6 +21,8 @@ NoteNest provide API endpoints for you to manage and share your notes with other
 
 Now visit http://localhost:3000. You can see the app running.
 
+You can run the script `yarn studio` to visualize the database and it opens http://localhost:5555
+
 ### Contribution
 
 If you feel any new feature (or) something is not working, feel free to raise an issue !
