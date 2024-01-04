@@ -8,6 +8,7 @@
     "dev": "npx tsc && node dist/index.js"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "prisma": "^5.7.1",
