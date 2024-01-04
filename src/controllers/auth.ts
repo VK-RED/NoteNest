@@ -6,6 +6,8 @@ import { ACCOUNT_CREATION_SUCCESS, PASSWORD_MISMATCH, SALT_ROUNDS, SECRET, USER_
 import {z} from 'zod'
 import bcrypt from 'bcrypt'
 
+// This file consists of controllers for authentication routers
+
 // function to signup a user
 
 export async function SignupController(req:Request, res:Response){

@@ -1,5 +1,7 @@
 import {rateLimit} from 'express-rate-limit'
 
+// rate limiter middleware to guard the server
+
 // rate limit the user for 100req/hr
 const limiter = rateLimit({
     max: 100,

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {prisma} from "../index"
 import { NO_RESULTS, UNFORSEEN_ERROR } from "../constants";
 
+// This file consists of controller for search router
 
 // function to search a note 
 export async function searchController(req:Request, res:Response){

@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { INVALID_TOKEN, SECRET, TOKEN_MISSING } from "../constants";
 import jwt from 'jsonwebtoken'
 
+
+// authentication middleware to guard protected routes
+
 export const authMiddleware = async(req:Request, res:Response, next:NextFunction) => {
 
     try {

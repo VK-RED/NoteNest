@@ -1,5 +1,8 @@
 import z from 'zod'
 
+// using zod for validating incomimg requests 
+// and error handling
+
 export const AuthInputProps = z.object({
     email: z.string().email(),
     password: z.string().min(8).max(16)

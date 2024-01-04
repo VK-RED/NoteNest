@@ -13,6 +13,9 @@ import { NEW_NOTE_ADDED,
          UNFORSEEN_ERROR, 
          USER_NOT_FOUND } from '../constants';
 
+
+// This file consists of controllers for notes router
+
 // function to create a new note
 export async function createNoteController(req:Request,res:Response){
     try {

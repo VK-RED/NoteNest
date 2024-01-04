@@ -6,18 +6,22 @@ import { PrismaClient } from '@prisma/client'
 import { notesRouter } from './routes/notes';
 import { searchRouter } from './routes/search';
 
+// initial configs
 export const prisma = new PrismaClient()
 const app = express();
 const PORT = 3000;
 const router = express.Router();
 
+// use body-parser for incoming requests
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// basic health route
 router.get('/', (req : Request, res : Response) => {
   res.json({message:'The Server is Up !!!'})
 })
 
+// actual logic routers
 app.use(router);
 
 router.use('/api/auth', authRouter);
